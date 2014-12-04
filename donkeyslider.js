@@ -1,11 +1,11 @@
 /*
- * DonkeySlider - a hammer based donkey slider
+ * DonkeySlider - a jQuery/Hammer based donkey slider
  * Author: Samuel Delesque <hello@samueldelesque.me>
  *
  *  example usage: 
 	
 	$(document).ready(function() {
-		window.myDonkey = new DonkeySlider(".pro-slider");
+		window.myDonkey = new DonkeySlider(".slider");
 	});
 
  *
@@ -25,6 +25,12 @@
 			offset:0,
 			movement:0,
 			direction:null,
+
+			//slides fill 90% of window width
+			showPercent:0.9,
+
+			//if the slider has margins
+			sliderMargin:20,
 
 			init: function(slider,slides,handles){
 				//construct the jQuery elements for later use
@@ -86,7 +92,7 @@
 
 			listen: function(){
 				Donkey.$w.resize(function(){
-					Donkey.slideWidth = Math.round((Donkey.$w.width()-40) * 0.9);
+					Donkey.slideWidth = Math.round((Donkey.$w.width()-(Donkey.sliderMargin * 2)) * Donkey.showPercent);
 					Donkey.$slides.css("width",Donkey.slideWidth);
 				});
 				Donkey.$w.trigger("resize");
