@@ -74,16 +74,18 @@
 			w:{},
 			activeSlide:null,
 			slideWidth:240,
-			slideMargin:20,
 			offset:0,
 			movement:0,
 			direction:null,
 
-			//slides fill 90% of window width
-			showPercent:0.9,
+			//% of window width
+			showPercent:100,
 
 			//if the slider has margins
-			sliderMargin:20,
+			sliderMargin:30,
+
+			//if the slides have margins
+			slidesMargin:10,
 
 			init: function(container,slider,slides,handles){
 				//construct the jQuery elements for later use
@@ -112,15 +114,15 @@
 				_.$container.css({
 					overflow:"hidden",
 					width:"100%",
-					paddingRight:_.slideMargin,
+					padding:"0 "+_.sliderMargin+"px",
 					boxSizing:"border-box",
 				});
 				_.$slides.css({
 					position:"relative",
-					marginLeft:_.slideMargin,
+					marginLeft:_.slidesMargin,
 					boxSizing:"border-box",
 					float:"left",
-				});
+				}).eq(0).css("margin-left",0);
 			},
 
 			swiping: function(e){
@@ -162,12 +164,15 @@
 			},
 
 			width: function(){
-				return _.slideWidth + _.slideMargin;
+				return _.slideWidth + _.slidesMargin;
 			},
 
 			showSlide: function(index){
 				var offset = -index*_.width();
-				if(index == _.count-1)offset += (1-_.showPercent) * _.slideWidth;
+				if(_.showPercent!==100){
+					var correct = (1-_.showPercent/100) * _.slideWidth + (2 * _.sliderMargin) - _.slidesMargin;
+					if(index == _.count-1)offset += correct;
+				}
 				_.$slider.animate({
 					transform:"translateX("+Math.round(offset)+"px)"
 				});
@@ -179,10 +184,10 @@
 
 			listen: function(){
 				_.$w.resize(function(){
-					_.slideWidth = Math.round((_.$w.width()-(_.sliderMargin * 2)) * _.showPercent);
+					_.slideWidth = Math.round((_.$w.width()-(_.sliderMargin * 2)) * _.showPercent/100);
 					_.$slides.css("width",_.slideWidth);
 					_.$slider.css({
-						width: (_.slideWidth+_.slideMargin) * _.count
+						width: (_.slideWidth+_.slidesMargin) * _.count + _.sliderMargin * 2
 					});
 				});
 				_.$w.trigger("resize");
