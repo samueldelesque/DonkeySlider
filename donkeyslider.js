@@ -2,6 +2,14 @@
  * DonkeySlider - a jQuery/Hammer based donkey slider
  * Author: Samuel Delesque <hello@samueldelesque.me>
  *
+ *
+ * Dependencies: 
+ * 
+ * jQuery - http://jquery.com/ 
+ * jQuery.Hammer - http://hammerjs.github.io/
+ * (jQuery.transform - http://louisremi.github.io/jquery.transform.js/  for old browser support)
+ *
+ *
  *  example usage: 
 	
 	$(document).ready(function() {
@@ -11,11 +19,11 @@
  *
  */
 
-(function($,hammer) {
+(function(window,$,hammer) {
 	if(!$)console.error("jQuery is required for Donkey.");
 	if(!hammer)console.error("jQuery.hammer is required for Donkey.");
 	$.fn.hammer = hammer;
-	var DonkeySlider = function(selector){
+	window.DonkeySlider = function(selector){
 		var Donkey = {
 			$el:null,
 			w:{},
@@ -64,30 +72,38 @@
 						var pos = Donkey.offset;
 						if(Donkey.direction == "dragleft"){pos-=100;}
 						else{pos+=100;}
-						var width = Donkey.slideWidth + Donkey.slideMargin,
-							index = -1 * Math.round(pos/width),
-							offset = -index * width,
-							min = -((Donkey.count-1) * width),
+						var index = -1 * Math.round(pos/(Donkey.slideWidth + Donkey.slideMargin)),
+							min = -((Donkey.count-1) * (Donkey.slideWidth + Donkey.slideMargin)),
 							max = 0;
 						
-						if(pos < min){
-							offset=min;
-							index = Donkey.count-1;
-						}
-						if(pos > max){
-							offset=max; 
-							index = 0;
-						}
-						Donkey.$slider.animate({
-							transform:"translateX("+offset+"px)"
-						});
-
-						Donkey.$handles.find("span").removeClass("active");
-						Donkey.$handles.find("span").eq(index).addClass("active");
-
-						Donkey.movement = offset;
+						if(pos < min)index = Donkey.count-1;
+						if(pos > max)index = 0;
+						Donkey.showSlide(index);
 					break;
 				}
+			},
+
+			next: function(){
+				var next = Donkey.activeSlide + 1;
+				if(next >= Donkey.count)next=0;
+				Donkey.showSlide(next);
+			},
+
+			prev: function(){
+				var prev = Donkey.activeSlide - 1;
+				if(prev <= 0)prev=Donkey.count-1;
+				Donkey.showSlide(prev);
+			},
+
+			showSlide: function(index){
+				var offset = -index*(Donkey.slideWidth + Donkey.slideMargin);
+				Donkey.$slider.animate({
+					transform:"translateX("+offset+"px)"
+				});
+				Donkey.movement = offset;
+				Donkey.activeSlide = index;
+
+				Donkey.$handles.find("span").removeClass("active").eq(index).addClass("active");
 			},
 
 			listen: function(){
@@ -104,4 +120,4 @@
 		}
 		return Donkey.init(selector);
 	}
-})(jQuery,jQuery.fn.hammer);
+})(window,jQuery,jQuery.fn.hammer);
