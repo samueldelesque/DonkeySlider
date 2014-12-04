@@ -1,22 +1,24 @@
-DonkeySlider
-============
 
-A jQuery/hammer based slider
+ ==============
+ DonkeySlider - a jQuery/Hammer based donkey slider
+ ==============
 
- * Author: Samuel Delesque <hello@samueldelesque.me>
- *
- *
- * Dependencies: 
- * 
- * jQuery - http://jquery.com/ 
- * jQuery.Hammer - http://hammerjs.github.io/
- * (jQuery.transform - http://louisremi.github.io/jquery.transform.js/  for old browser support)
- *
- *
+ Author: Samuel Delesque <hello@samueldelesque.me>
+ Repo: https://github.com/samueldelesque/DonkeySlider
+ 
+ ==============
+ Dependencies: 
+ ==============
+  
+  jQuery - http://jquery.com/ 
+  jQuery.Hammer - http://hammerjs.github.io/
+  (jQuery.transform - http://louisremi.github.io/jquery.transform.js/  for old browser support)
 
+ ==============
+ example usage: 
+ ==============
 
-example usage: 
-```	
+```
 	//HTML
 	<div class="slider-container">
 		<div class="slider">
@@ -35,10 +37,13 @@ example usage:
 		</div>
 		<div class="handles"></div>
 	</div>
+
+
 	//JS
 	$(document).ready(function() {
 		window.myDonkey = new DonkeySlider(".slider-container");
 	});
+
 	//CSS (for the handles, optional)
 	.handles{
 		margin-top:10px;
@@ -62,4 +67,3 @@ example usage:
 		background: #000;
 		border-radius:6px;
 	}
-	```
