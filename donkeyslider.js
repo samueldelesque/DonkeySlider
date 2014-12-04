@@ -24,7 +24,7 @@
 	if(!hammer)console.error("jQuery.hammer is required for Donkey.");
 	$.fn.hammer = hammer;
 	window.DonkeySlider = function(selector){
-		var Donkey = {
+		var _ = {
 			$el:null,
 			w:{},
 			activeSlide:null,
@@ -42,82 +42,82 @@
 
 			init: function(slider,slides,handles){
 				//construct the jQuery elements for later use
-				Donkey.$w = $(window);
+				_.$w = $(window);
 
-				if(!slider){console.error("Please pass a valid jQuery selector to Donkey.init()");return;}
-				Donkey.$slider = $(slider);
+				if(!slider){console.error("Please pass a valid jQuery selector to _.init()");return;}
+				_.$slider = $(slider);
 			
 				if(!slides){slides = ".slide"}
-				Donkey.$slides = $(slides,Donkey.slider);
+				_.$slides = $(slides,_.slider);
 
 				if(!handles){handles = ".handles"}
-				Donkey.$handles = $(handles,Donkey.slider);
+				_.$handles = $(handles,_.slider);
 
-				Donkey.listen();
-				return Donkey;
+				_.listen();
+				return _;
 			},
 
 			swiping: function(e){
 				switch(e.type){
 					case "dragleft":
 					case "dragright":
-						Donkey.offset = Math.round(e.gesture.deltaX+Donkey.movement);
-						Donkey.direction = e.type;
-						Donkey.$slider.css({
-							transform:"translateX("+Donkey.offset+"px)"
+						_.offset = Math.round(e.gesture.deltaX+_.movement);
+						_.direction = e.type;
+						_.$slider.css({
+							transform:"translateX("+_.offset+"px)"
 						});
 					break;
 
 					case "release":
-						var pos = Donkey.offset;
-						if(Donkey.direction == "dragleft"){pos-=100;}
+						var pos = _.offset;
+						if(_.direction == "dragleft"){pos-=100;}
 						else{pos+=100;}
-						var index = -1 * Math.round(pos/(Donkey.slideWidth + Donkey.slideMargin)),
-							min = -((Donkey.count-1) * (Donkey.slideWidth + Donkey.slideMargin)),
+						var index = -1 * Math.round(pos/(_.slideWidth + _.slideMargin)),
+							min = -((_.count-1) * (_.slideWidth + _.slideMargin)),
 							max = 0;
 						
-						if(pos < min)index = Donkey.count-1;
+						if(pos < min)index = _.count-1;
 						if(pos > max)index = 0;
-						Donkey.showSlide(index);
+						_.showSlide(index);
 					break;
 				}
 			},
 
 			next: function(){
-				var next = Donkey.activeSlide + 1;
-				if(next >= Donkey.count)next=0;
-				Donkey.showSlide(next);
+				var next = _.activeSlide + 1;
+				if(next >= _.count)next=0;
+				_.showSlide(next);
 			},
 
 			prev: function(){
-				var prev = Donkey.activeSlide - 1;
-				if(prev <= 0)prev=Donkey.count-1;
-				Donkey.showSlide(prev);
+				var prev = _.activeSlide - 1;
+				if(prev <= 0)prev=_.count-1;
+				_.showSlide(prev);
 			},
 
 			showSlide: function(index){
-				var offset = -index*(Donkey.slideWidth + Donkey.slideMargin);
-				Donkey.$slider.animate({
+				var offset = -index*(_.slideWidth + _.slideMargin);
+				_.$slider.animate({
 					transform:"translateX("+offset+"px)"
 				});
-				Donkey.movement = offset;
-				Donkey.activeSlide = index;
+				_.movement = offset;
+				_.activeSlide = index;
 
-				Donkey.$handles.find("span").removeClass("active").eq(index).addClass("active");
+				_.$handles.find("span").removeClass("active").eq(index).addClass("active");
 			},
 
 			listen: function(){
-				Donkey.$w.resize(function(){
-					Donkey.slideWidth = Math.round((Donkey.$w.width()-(Donkey.sliderMargin * 2)) * Donkey.showPercent);
-					Donkey.$slides.css("width",Donkey.slideWidth);
+				_.$w.resize(function(){
+					_.slideWidth = Math.round((_.$w.width()-(_.sliderMargin * 2)) * _.showPercent);
+					_.$slides.css("width",_.slideWidth);
 				});
-				Donkey.$w.trigger("resize");
+				_.$w.trigger("resize");
 
-				Donkey.$slider.hammer({drag_lock_to_axis: true}).on("release dragleft dragright swipeleft swiperight", Donkey.swiping);
-				Donkey.count = Donkey.$slides.length;
-				Donkey.$slider.trigger("release");
+				_.$slider.hammer({drag_lock_to_axis: true}).on("release dragleft dragright swipeleft swiperight", _.swiping);
+				_.count = _.$slides.length;
+				_.$slider.trigger("release");
 			}
 		}
-		return Donkey.init(selector);
+		return _.init(selector);
 	}
 })(window,jQuery,jQuery.fn.hammer);
