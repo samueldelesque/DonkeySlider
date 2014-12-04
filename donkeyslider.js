@@ -138,8 +138,8 @@
 						var pos = _.offset;
 						if(_.direction == "dragleft"){pos-=100;}
 						else{pos+=100;}
-						var index = -1 * Math.round(pos/(_.slideWidth + _.slideMargin)),
-							min = -((_.count-1) * (_.slideWidth + _.slideMargin)),
+						var index = -1 * Math.round(pos/_.width()),
+							min = -((_.count-1) * _.width()),
 							max = 0;
 						
 						if(pos < min)index = _.count-1;
@@ -161,8 +161,12 @@
 				_.showSlide(prev);
 			},
 
+			width: function(){
+				return _.slideWidth + _.slideMargin;
+			},
+
 			showSlide: function(index){
-				var offset = -index*(_.slideWidth + _.slideMargin);
+				var offset = -index*_.width();
 				if(index == _.count-1)offset += (1-_.showPercent) * _.slideWidth;
 				_.$slider.animate({
 					transform:"translateX("+Math.round(offset)+"px)"
